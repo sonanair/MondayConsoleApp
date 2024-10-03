@@ -14,8 +14,8 @@ internal class Program {
         var status = String.Empty;
         var boardId = String.Empty;
 
-        Console.WriteLine("Usage: MondayConnectApp.exe -Action=CreateBoard -Title=Title1");
-        // Console.WriteLine("Usage: MondayConnectApp.exe -Action=CreateBoard -Title=CMDTestBoard");
+        
+        // Console.WriteLine("Usage: MondayConnectApp.exe -Action=[action] -Title=[CMDTestBoard]");
         parseArguments(args);
         await processRequest();
 
@@ -75,6 +75,16 @@ internal class Program {
             mondayConnectRequest.Description = description;
             mondayConnectRequest.BoardId = boardId;
 
+            if (args.Length < 2)
+            {
+                Console.WriteLine("Usage: ");
+                Console.WriteLine("MondayConnectApp -Action=CreateBoard -Title=[title]");
+                Console.WriteLine("MondayConnectApp -Action=UpdateBoard -Title=[title] -BoardId=[board ID]");
+                Console.WriteLine("MondayConnectApp -Action=DeleteBoard -BoardId=[board ID]");
+                Console.WriteLine("MondayConnectApp -Action=CreateItem -Title=[title] -BoardId=[board ID]");
+                Console.WriteLine("Additional Tags: -Description=[description]");
+            }
+            
             if (action == "CreateBoard")
             {
                 var createBoardResponse = await restHttpClient.BoardService(mondayConnectRequest);
@@ -87,20 +97,19 @@ internal class Program {
                 Console.WriteLine("Item ID: " + createItemResponse.Data.CreateItem.Id);
             }
 
-            //if (action == "DeleteBoard")
-            //{
-            //    var deleteBoardResponse = restHttpClient.DeleteService(mondayConnectRequest);
-            //    Console.WriteLine("Deleted Board ID: " + deleteBoardResponse.Data.DeleteBoard.Id);
-            //}
+            if (action == "DeleteBoard")
+            {
+                var deleteBoardResponse = await restHttpClient.DeleteService(mondayConnectRequest);
+                Console.WriteLine("Deleted Board ID: " + deleteBoardResponse.Data.DeleteBoard.Id);
+            }
 
-            //if (action == "UpdateBoard")
-            //{
-            //    var updateBoardResponse = restHttpClient.UpdateService(mondayConnectRequest);
-            //    Console.WriteLine("Updated Board ID: " + updateBoardResponse.Data);
-            //    //var updateBoardResult = JsonConvert.DeserializeObject<UpdateBoardResult>(updateBoardResponse.Data.ToString());
-            //    //Console.WriteLine(updateBoardResult.UndoData.EntityId);
-
-            //}
+            if (action == "UpdateBoard")
+            {
+                var updateBoardResponse = await restHttpClient.UpdateService(mondayConnectRequest);
+                Console.WriteLine("Updated Board ID: " + updateBoardResponse.Data);
+                //var updateBoardResult = JsonConvert.DeserializeObject<UpdateBoardResult>(updateBoardResponse.Data.ToString());
+                //Console.WriteLine(updateBoardResult.UndoData.EntityId);
+            }
 
         }
     }

@@ -80,6 +80,8 @@ namespace MondayConnectApp {
 
        
 
+      
+
         private async Task<T> SendRequestAsync<T>(string postData) where T : new() {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             var client = new HttpClient();
@@ -166,6 +168,11 @@ namespace MondayConnectApp {
             var postData = "";
             Console.WriteLine(postData);
 
+            if (string.IsNullOrEmpty(mondayConnectRequest.BoardId))
+            {
+                Console.WriteLine("Please provide Board ID");
+            }
+
             postData = BuildCreateItemPayload(mondayConnectRequest.BoardId, groupId, mondayConnectRequest.Title);
             return await SendRequestAsync<CreateItemResponse>(postData);
         }
@@ -173,6 +180,7 @@ namespace MondayConnectApp {
         public async Task<DeleteBoardResponse> DeleteService(MondayConnectRequest mondayConnectRequest) {
             var postData = "";
             Console.WriteLine(postData);
+
 
             postData = BuildDeleteBoardPayload(mondayConnectRequest.BoardId);
             return await SendRequestAsync<DeleteBoardResponse>(postData);
